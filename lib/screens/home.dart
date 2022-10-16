@@ -1,7 +1,11 @@
 import 'package:bmi_calculator/constant.dart';
+import 'package:bmi_calculator/screens/result.dart';
 import 'package:flutter/material.dart';
 import 'package:bmi_calculator/widgets/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'dart:math';
+
+enum Gender { male, female }
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -12,6 +16,25 @@ class _HomeScreenState extends State<HomeScreen> {
   double height = 180;
   int weight = 60;
   int age = 20;
+  Gender selectedgender = Gender.male;
+  void _goToResultScreen() {
+    double _result = weight / pow(height / 100, 2);
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ResultScreen(
+          result: _result,
+        ),
+      ),
+    );
+  }
+  // void _goToResultScreen() {
+  //   Navigator.push(context,  MaterialPageRoute(builder: (context) {
+  //     return ResultScreen();
+  //   }));
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,6 +49,12 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Expanded(
                   child: ReusableCard(
+                    selected: selectedgender == Gender.male ? true : false,
+                    onPressed: () {
+                      setState(() {
+                        selectedgender = Gender.male;
+                      });
+                    },
                     child: IconContent(
                       icondata: FontAwesomeIcons.mars,
                       title: 'MALE',
@@ -34,6 +63,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 Expanded(
                   child: ReusableCard(
+                    selected: selectedgender == Gender.female ? true : false,
+                    onPressed: () {
+                      setState(() {
+                        selectedgender = Gender.female;
+                      });
+                    },
                     child: IconContent(
                       icondata: FontAwesomeIcons.venus,
                       title: 'FEMALE',
@@ -225,20 +260,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-          RawMaterialButton(
-            onPressed: () {},
-            child: Text(
-              "CALCULATE",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-            ),
-            fillColor: kBottonContainerColour,
-            constraints: BoxConstraints.tightFor(
-              width: double.infinity,
-              height: 56,
-            ),
-          ),
+         CustomButton(onPressed: _goToResultScreen,),
         ],
       ),
     );
   }
 }
+
